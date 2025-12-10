@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>读者管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 图书管理系统</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">帮助</a></li>
+                <li><a href="{{ url_for('books') }}">图书管理</a></li>
+                <li><a href="{{ url_for('borrow') }}">借阅管理</a></li>
+                <li><a href="{{ url_for('logout') }}">退出 ({{ session.username }})</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h2>👥 读者列表</h2>
+
+            <!-- 添加读者表单 -->
+            <form method="post" action="{{ url_for('add_reader') }}" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                <h3>➕ 添加新读者</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>手机号</label>
+                        <input type="text" name="phone" required pattern="1[3-9]\d{9}" title="请输入11位中国大陆手机号">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">添加读者</button>
+            </form>
+
+            <!-- 读者表格 -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>姓名</th>
+                        <th>手机号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reader in readers %}
+                    <tr>
+                        <td data-label="ID">{{ reader[0] }}</td>
+                        <td data-label="姓名">{{ reader[1] }}</td>
+                        <td data-label="手机号">{{ reader[2] }}</td>
+                        <td data-label="操作">
+                            <form method="POST" action="{{ url_for('delete_reader', reader_id=reader[0]) }}"
+                                style="display:inline;" onsubmit="return confirm('确定要删除读者【{{ reader[1] }}】吗？此操作不可恢复！')">
+                                <button type="submit" class="btn btn-danger">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

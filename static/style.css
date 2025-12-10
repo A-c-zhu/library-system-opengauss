@@ -1,0 +1,215 @@
+/* static/style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 头部 */
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5rem;
+}
+
+/* 导航 */
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background: #3498db;
+}
+
+/* 主内容区 */
+.main-content {
+    background: white;
+    margin-top: 20px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+}
+
+/* 表格 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f7ff;
+}
+
+tr:hover {
+    background-color: #e3f2fd;
+}
+
+/* 按钮 */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #2980b9;
+}
+
+.btn-danger {
+    background: #e74c3c;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.btn-success {
+    background: #2ecc71;
+}
+
+.btn-success:hover {
+    background: #27ae60;
+}
+
+/* 表单 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-actions {
+    margin-top: 20px;
+}
+
+/* 错误提示 */
+.error {
+    color: #e74c3c;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* 登录页特殊样式 */
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    border: none;
+    color: #2c3e50;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+    
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+    
+    th, td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+    
+    td:before, th:before {
+        content: attr(data-label) ": ";
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+}

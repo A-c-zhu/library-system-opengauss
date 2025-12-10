@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 图书管理系统</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">帮助</a></li>
+                <li><a href="{{ url_for('readers') }}">读者管理</a></li>
+                <li><a href="{{ url_for('borrow') }}">借阅管理</a></li>
+                <li><a href="{{ url_for('logout') }}">退出 ({{ session.username }})</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h2>📚 图书列表</h2>
+
+            <!-- 添加图书表单 -->
+            <details>
+                <summary style="cursor: pointer; color: #3498db; font-weight: bold; margin-bottom: 20px;">➕ 添加新图书</summary>
+                <form method="post" action="{{ url_for('add_book') }}" class="form-inline">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                        <div class="form-group">
+                            <label>ISBN</label>
+                            <input type="text" name="isbn" required>
+                        </div>
+                        <div class="form-group">
+                            <label>书名</label>
+                            <input type="text" name="book_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>作者</label>
+                            <input type="text" name="author" required>
+                        </div>
+                        <div class="form-group">
+                            <label>分类</label>
+                            <select name="category_id">
+                                <option value="">-- 无分类 --</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat[0] }}">{{ cat[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>库存</label>
+                            <input type="number" name="stock" min="0" value="1" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">添加图书</button>
+                </form>
+            </details>
+
+            <!-- 图书表格 -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ISBN</th>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>分类</th>
+                        <th>库存</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td data-label="ID">{{ book[0] }}</td>
+                        <td data-label="ISBN">{{ book[1] }}</td>
+                        <td data-label="书名">{{ book[2] }}</td>
+                        <td data-label="作者">{{ book[3] }}</td>
+                        <td data-label="分类">{{ book[4] or '—' }}</td>
+                        <td data-label="库存">{{ book[5] }}</td>
+                        <td data-label="操作">
+                            <a href="{{ url_for('delete_book', book_id=book[0]) }}" 
+                               class="btn btn-danger"
+                               onclick="return confirm('确定删除此图书？')">删除</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

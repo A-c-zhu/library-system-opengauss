@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图书管理系统</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>📚 图书管理系统</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('books') }}">图书管理</a></li>
+                <li><a href="{{ url_for('readers') }}">读者管理</a></li>
+                <li><a href="{{ url_for('borrow') }}">借阅管理</a></li>
+                <li><a href="{{ url_for('logout') }}">退出 ({{ username }})</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <h2>欢迎, {{ username }}!</h2>
+            <p>您已成功登录图书管理系统。请选择右上方菜单进行操作：</p>
+            <ul style="margin: 20px 0; padding-left: 20px;">
+                <li>📚 <strong>图书管理</strong>：添加、编辑、删除图书信息</li>
+                <li>👥 <strong>读者管理</strong>：维护读者资料</li>
+                <li>🔁 <strong>借阅管理</strong>：处理借书与还书操作</li>
+            </ul>
+            <div style="background: #e8f4fc; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <strong>💡 提示：</strong>所有操作将实时同步到 openGauss 数据库。
+            </div>
+        </div>
+    </div>
+</body>
+</html>
