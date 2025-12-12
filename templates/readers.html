@@ -9,7 +9,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>📚 图书管理系统</h1>
+            <h1>📚 双鸭山图书管理系统</h1>
             <ul class="nav-links">
                 <li><a href="{{ url_for('dashboard') }}">帮助</a></li>
                 <li><a href="{{ url_for('books') }}">图书管理</a></li>
@@ -24,20 +24,25 @@
             <h2>👥 读者列表</h2>
 
             <!-- 添加读者表单 -->
-            <form method="post" action="{{ url_for('add_reader') }}" style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                <h3>➕ 添加新读者</h3>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
-                    <div class="form-group">
-                        <label>姓名</label>
-                        <input type="text" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>手机号</label>
-                        <input type="text" name="phone" required pattern="1[3-9]\d{9}" title="请输入11位中国大陆手机号">
-                    </div>
+            <details style="margin: 20px 0; border: 1px solid #e9ecef; border-radius: 8px; background: #f8f9fa;">
+                <summary style="cursor: pointer; padding: 16px; font-weight: bold; color: #3498db; list-style: none; outline: none;">
+                    ➕ 添加新读者</summary>
+                <div style="padding: 20px; border-top: 1px solid #eee;">
+                    <form method="post" action="{{ url_for('add_reader') }}">
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <div class="form-group">
+                                <label>姓名</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>手机号</label>
+                                <input type="text" name="phone" required pattern="1[3-9]\d{9}" title="请输入11位中国大陆手机号">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-success" style="margin-top: 15px;">添加读者</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-success">添加读者</button>
-            </form>
+            </details>
 
             <!-- 读者表格 -->
             <table>

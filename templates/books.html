@@ -9,7 +9,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>📚 图书管理系统</h1>
+            <h1>📚 双鸭山图书管理系统</h1>
             <ul class="nav-links">
                 <li><a href="{{ url_for('dashboard') }}">帮助</a></li>
                 <li><a href="{{ url_for('readers') }}">读者管理</a></li>
@@ -22,6 +22,18 @@
     <div class="container">
         <div class="main-content">
             <h2>📚 图书列表</h2>
+
+            <!-- 搜索图书表单 -->
+            <div style="margin: 20px 0;">
+                <form method="get" action="{{ url_for('books') }}" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" name="q" placeholder="输入书名、作者或ISBN..." value="{{ request.args.get('q', '') }}"
+                        style="padding: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px;">
+                    <button type="submit" class="btn btn-success">🔍 搜索</button>
+                    {% if request.args.get('q') %}
+                        <a href="{{ url_for('books') }}" class="btn btn-secondary">显示全部</a>
+                    {% endif %}
+                </form>
+            </div>
 
             <!-- 添加图书表单 -->
             <details>

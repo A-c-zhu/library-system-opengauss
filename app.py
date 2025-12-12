@@ -62,20 +62,41 @@ def dashboard():
 def books():
     if 'admin_id' not in session:
         return redirect(url_for('login'))
+    
+    query = request.args.get('q', '').strip()  # 获取搜索关键词
+    
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("""
-        SELECT b.book_id, b.isbn, b.book_name, b.author, c.category_name, b.stock_quantity
-        FROM books b
-        LEFT JOIN categories c ON b.category_id = c.category_id
-        ORDER BY b.book_id
-    """)
-    books = cur.fetchall()
+
+    # 获取分类（不变）
     cur.execute("SELECT category_id, category_name FROM categories")
     categories = cur.fetchall()
+
+    if query:
+        # 搜索：模糊匹配 ISBN、书名、作者（使用 ILIKE 忽略大小写）
+        cur.execute("""
+            SELECT b.book_id, b.isbn, b.book_name, b.author, c.category_name, b.stock_quantity
+            FROM books b
+            LEFT JOIN categories c ON b.category_id = c.category_id
+            WHERE b.book_name ILIKE %s
+               OR b.author ILIKE %s
+               OR b.isbn ILIKE %s
+            ORDER BY b.book_id
+        """, (f'%{query}%', f'%{query}%', f'%{query}%'))
+    else:
+        # 无搜索词：显示全部
+        cur.execute("""
+            SELECT b.book_id, b.isbn, b.book_name, b.author, c.category_name, b.stock_quantity
+            FROM books b
+            LEFT JOIN categories c ON b.category_id = c.category_id
+            ORDER BY b.book_id
+        """)
+
+    books = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('books.html', books=books, categories=categories)
+    
+    return render_template('books.html', books=books, categories=categories, search_query=query)
 
 @app.route('/add_book', methods=['POST'])
 def add_book():

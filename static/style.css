@@ -167,12 +167,22 @@ tr:hover {
 
 /* 登录页特殊样式 */
 .login-container {
-    max-width: 400px;
+    max-width: 600px;
     margin: 80px auto;
-    background: white;
-    padding: 40px;
+   /* background: white;*/
+    padding: 80px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    background-image: url('/static/SYSU.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* 半透明白色遮罩：通过背景色叠加 */
+    background-color: rgba(255, 255, 255, 0.6); /* 白色 + 70% 透明度 */
+    
+    /* 确保背景图和颜色都能显示 */
+    background-blend-mode: overlay; /* 可选：混合模式让效果更自然 */
 }
 
 .login-container h2 {
