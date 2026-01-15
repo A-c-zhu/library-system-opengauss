@@ -41,7 +41,7 @@
                         <select name="reader_id" required>
                             <option value="">-- 请选择 --</option>
                             {% for reader in readers %}
-                            <option value="{{ reader[0] }}">{{ reader[1] }}</option>
+                            <option value="{{ reader[0] }}">{{ reader[1] }} (ID: {{ reader[0] }})</option>
                             {% endfor %}
                         </select>
                     </div>
