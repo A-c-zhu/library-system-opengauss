@@ -44,6 +44,27 @@
                 </div>
             </details>
 
+            <!-- 读者搜索框 -->
+            <div style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                <form method="get" action="{{ url_for('readers') }}" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: end;">
+                    <div>
+                        <label for="search_query">🔍 搜索读者</label>
+                        <input 
+                            type="text" 
+                            id="search_query"
+                            name="q" 
+                            value="{{ request.args.get('q', '') }}" 
+                            placeholder="ID / 姓名 / 手机号"
+                            style="padding: 6px 10px; width: 220px; border: 1px solid #ccc; border-radius: 4px;"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 6px 16px;">搜索</button>
+                    {% if request.args.get('q') %}
+                    <a href="{{ url_for('readers') }}" class="btn" style="padding: 6px 16px; text-decoration: none; background: #eee;">清空</a>
+                    {% endif %}
+                </form>
+            </div>
+
             <!-- 读者表格 -->
             <table>
                 <thead>

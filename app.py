@@ -132,13 +132,32 @@ def delete_book(book_id):
 def readers():
     if 'admin_id' not in session:
         return redirect(url_for('login'))
+    
+    # 获取搜索关键词
+    q = request.args.get('q', '').strip()
+
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT reader_id, reader_name, phone FROM readers ORDER BY reader_id")
-    readers = cur.fetchall()
+
+    if q:
+        # 使用 ILIKE 进行不区分大小写的模糊匹配（PostgreSQL）
+        # CAST(reader_id AS TEXT) 允许通过 ID 搜索（如输入 "101"）
+        cur.execute("""
+            SELECT reader_id, reader_name, phone 
+            FROM readers 
+            WHERE CAST(reader_id AS TEXT) ILIKE %s 
+               OR reader_name ILIKE %s 
+               OR phone ILIKE %s
+            ORDER BY reader_id
+        """, (f'%{q}%', f'%{q}%', f'%{q}%'))
+    else:
+        cur.execute("SELECT reader_id, reader_name, phone FROM readers ORDER BY reader_id")
+    
+    readers_list = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('readers.html', readers=readers)
+    
+    return render_template('readers.html', readers=readers_list)
 
 @app.route('/add_reader', methods=['POST'])
 def add_reader():
@@ -192,28 +211,61 @@ def delete_reader(reader_id):
 def borrow():
     if 'admin_id' not in session:
         return redirect(url_for('login'))
+    
+    # 获取搜索关键词（来自 URL ?q=xxx）
+    q = request.args.get('q', '').strip()
+
     conn = get_db_connection()
     cur = conn.cursor()
+
+    # 查询可借图书
     cur.execute("""
         SELECT book_id, book_name, stock_quantity 
         FROM books WHERE stock_quantity > 0
     """)
     available_books = cur.fetchall()
+
+    # 查询所有读者
     cur.execute("SELECT reader_id, reader_name FROM readers")
     readers = cur.fetchall()
-    cur.execute("""
+
+    # 构建借阅记录查询
+    base_query = """
         SELECT br.record_id, b.book_name, r.reader_name, br.borrow_date, br.due_date, br.status
         FROM borrow_records br
         JOIN books b ON br.book_id = b.book_id
         JOIN readers r ON br.reader_id = r.reader_id
+    """
+    order_clause = """
         ORDER BY 
             CASE WHEN br.status = '未归还' THEN 0 ELSE 1 END,
             br.due_date ASC
-    """)
+    """
+
+    if q:
+        # 使用 ILIKE 进行不区分大小写的模糊匹配（PostgreSQL）
+        # 对日期字段转为 TEXT 再匹配（如 '2025-12' 可匹配 '2025-12-01'）
+        search_condition = """
+            WHERE 
+                CAST(br.record_id AS TEXT) ILIKE %s
+                OR b.book_name ILIKE %s
+                OR r.reader_name ILIKE %s
+                OR CAST(br.borrow_date AS TEXT) ILIKE %s
+                OR CAST(br.due_date AS TEXT) ILIKE %s
+                OR br.status ILIKE %s
+        """
+        like_q = f"%{q}%"
+        cur.execute(base_query + search_condition + order_clause,
+                    (like_q, like_q, like_q, like_q, like_q, like_q))
+    else:
+        cur.execute(base_query + order_clause)
+
     records = cur.fetchall()
     cur.close()
     conn.close()
-    return render_template('borrow.html', books=available_books, readers=readers, records=records)
+
+    # 将搜索关键词传给模板，用于保持输入框值
+    return render_template('borrow.html', books=available_books, readers=readers, records=records, q=q)
 
 @app.route('/do_borrow', methods=['POST'])
 def do_borrow():

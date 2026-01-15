@@ -41,6 +41,7 @@
                         <select name="reader_id" required>
                             <option value="">-- 请选择 --</option>
                             {% for reader in readers %}
+                            <!-- ✅ 已加上 ID 避免重名 -->
                             <option value="{{ reader[0] }}">{{ reader[1] }} (ID: {{ reader[0] }})</option>
                             {% endfor %}
                         </select>
@@ -53,7 +54,28 @@
                 <button type="submit" class="btn btn-success">确认借出</button>
             </form>
 
-            <h3 style="margin-top: 40px;">📋 借阅记录（按应归还日期升序排列）</h3>
+            <!-- 🔍 新增：借阅记录搜索框 -->
+            <div style="margin: 30px 0; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+                <form method="get" action="{{ url_for('borrow') }}" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: end;">
+                    <div>
+                        <label for="search_query">🔍 搜索借阅记录</label>
+                        <input 
+                            type="text" 
+                            id="search_query"
+                            name="q" 
+                            value="{{ request.args.get('q', '') }}" 
+                            placeholder="记录ID / 书名 / 读者 / 日期 / 状态"
+                            style="padding: 6px 10px; width: 250px; border: 1px solid #ccc; border-radius: 4px;"
+                        >
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 6px 16px;">搜索</button>
+                    {% if request.args.get('q') %}
+                    <a href="{{ url_for('borrow') }}" class="btn" style="padding: 6px 16px; text-decoration: none; background: #eee;">清空</a>
+                    {% endif %}
+                </form>
+            </div>
+
+            <h3 style="margin-top: 20px;">📋 借阅记录（按应归还日期升序排列）</h3>
             <table>
                 <thead>
                     <tr>
